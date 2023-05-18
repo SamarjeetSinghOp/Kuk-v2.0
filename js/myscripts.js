@@ -1,1 +1,87 @@
-const typedTextSpan=document.querySelector(".typed-text"),cursorSpan=document.querySelector(".cursor"),textArray=["Welcome to","आपका स्वागत है","ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ","स्वागतम् अस्ति"],typingDelay=200,erasingDelay=100,newTextDelay=2e3;let textArrayIndex=0,charIndex=0;async function type(){charIndex<textArray[textArrayIndex].length?(cursorSpan.classList.contains("typing")||cursorSpan.classList.add("typing"),typedTextSpan.textContent+=textArray[textArrayIndex].charAt(charIndex),charIndex++,setTimeout(type,200)):(cursorSpan.classList.remove("typing"),setTimeout(erase,2e3))}async function erase(){charIndex>0?(cursorSpan.classList.contains("typing")||cursorSpan.classList.add("typing"),typedTextSpan.textContent=textArray[textArrayIndex].substring(0,charIndex-1),charIndex--,setTimeout(erase,100)):(cursorSpan.classList.remove("typing"),++textArrayIndex>=textArray.length&&(textArrayIndex=0),setTimeout(type,1300))}document.addEventListener("DOMContentLoaded",function(){textArray.length&&setTimeout(type,2250)});const buttons=document.querySelectorAll(".button"),popups=document.querySelectorAll(".popup"),closebtn=document.querySelectorAll(".popup-close"),popupContainer=document.querySelectorAll(".popup-container");for(let i=0;i<buttons.length;i++){let e=buttons[i],t=popups[i],r=closebtn[i];e.addEventListener("click",()=>{t.classList.add("is-visible")}),r.addEventListener("click",()=>{t.classList.remove("is-visible")}),t.addEventListener("click",e=>{t.classList.contains("is-visible")&&!popupContainer[i].contains(e.target)&&t.classList.remove("is-visible")})}const sections=document.querySelectorAll(".animate-me"),observer=new IntersectionObserver(e=>{e.forEach(e=>{e.isIntersecting?e.target.classList.add("animated"):e.target.classList.remove("animated")})});sections.forEach(e=>{observer.observe(e)});
+const typedTextSpan = document.querySelector(".typed-text");
+const cursorSpan = document.querySelector(".cursor");
+
+const textArray = ["Welcome to", "आपका स्वागत है", "ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ", "स्वागतम् अस्ति"];
+const typingDelay = 200;
+const erasingDelay = 100;
+const newTextDelay = 2000;
+let textArrayIndex = 0;
+let charIndex = 0;
+
+async function type() {
+  if (charIndex < textArray[textArrayIndex].length) {
+    if (!cursorSpan.classList.contains("typing")) cursorSpan.classList.add("typing");
+    typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
+    charIndex++;
+    setTimeout(type, typingDelay);
+  }
+  else {
+    cursorSpan.classList.remove("typing");
+    setTimeout(erase, newTextDelay);
+  }
+}
+
+async function erase() {
+  if (charIndex > 0) {
+    if (!cursorSpan.classList.contains("typing")) cursorSpan.classList.add("typing");
+    typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex - 1);
+    charIndex--;
+    setTimeout(erase, erasingDelay);
+  }
+  else {
+    cursorSpan.classList.remove("typing");
+    textArrayIndex++;
+    if (textArrayIndex >= textArray.length) textArrayIndex = 0;
+    setTimeout(type, typingDelay + 1100);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  if (textArray.length) setTimeout(type, newTextDelay + 250);
+});
+
+const buttons = document.querySelectorAll('.button');
+const popups = document.querySelectorAll('.popup');
+const closebtn = document.querySelectorAll('.popup-close');
+const popupContainer = document.querySelectorAll('.popup-container');
+// const uis = document.getElementsByClassName('ui-dialog')
+
+for (let i = 0; i < buttons.length; i++) {
+  const button = buttons[i];
+  const popup = popups[i];
+  const close = closebtn[i];
+  // const ui = uis[i]
+  button.addEventListener('click', () => {
+    popup.classList.add('is-visible');
+  });
+  close.addEventListener('click', () => {
+    popup.classList.remove('is-visible');
+  });
+  popup.addEventListener('click', (event) => {
+    if (popup.classList.contains('is-visible')) {
+      // if (!popupContainer[i].contains(event.target)) {
+        popup.classList.remove('is-visible');
+      // }
+    }
+  });
+  // ui.addEventListener('click', () => {
+
+  // })
+}
+
+
+const sections = document.querySelectorAll('.animate-me');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animated');
+    }
+    else {
+      entry.target.classList.remove('animated');
+    }
+  });
+});
+
+sections.forEach(section => {
+  observer.observe(section);
+});
